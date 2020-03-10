@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Rift.GG.ViewModel;
+using Rift.GG.Controller;
+using Rift.GG.View;
 
 namespace Rift.GG
 {
@@ -20,9 +23,34 @@ namespace Rift.GG
     /// </summary>
     public partial class MainWindow : Window
     {
+        ControllerMain controller;
+        ViewModelMain viewModel;
         public MainWindow()
         {
+            controller = new ControllerMain();
+            viewModel = new ViewModelMain();
             InitializeComponent();
+
+            this.DataContext = viewModel;
+        }
+
+        private void ButtonSignUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(viewModel.Region))
+                return;
+            if (string.IsNullOrEmpty(viewModel.SummonerName))
+                return;
+
+            if (controller.GetSummoner(viewModel.SummonerName))
+            {
+                WindowProfile profile = new WindowProfile();
+                profile.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Not Found");
+            }
         }
     }
 }
